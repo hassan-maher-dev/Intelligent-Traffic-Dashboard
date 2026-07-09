@@ -1,0 +1,1506 @@
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\.terraform.lock.hcl
+==================================================
+# This file is maintained automatically by "terraform init".
+# Manual edits may be lost in future updates.
+
+provider "registry.terraform.io/hashicorp/aws" {
+  version     = "5.100.0"
+  constraints = "~> 5.0"
+  hashes = [
+    "h1:Ijt7pOlB7Tr7maGQIqtsLFbl7pSMIj06TVdkoSBcYOw=",
+    "h1:lcDxx0Nx+ifFqTBpxz8Un27O0s+I7UNJAr/rUpSqlig=",
+    "zh:054b8dd49f0549c9a7cc27d159e45327b7b65cf404da5e5a20da154b90b8a644",
+    "zh:0b97bf8d5e03d15d83cc40b0530a1f84b459354939ba6f135a0086c20ebbe6b2",
+    "zh:1589a2266af699cbd5d80737a0fe02e54ec9cf2ca54e7e00ac51c7359056f274",
+    "zh:6330766f1d85f01ae6ea90d1b214b8b74cc8c1badc4696b165b36ddd4cc15f7b",
+    "zh:7c8c2e30d8e55291b86fcb64bdf6c25489d538688545eb48fd74ad622e5d3862",
+    "zh:99b1003bd9bd32ee323544da897148f46a527f622dc3971af63ea3e251596342",
+    "zh:9b12af85486a96aedd8d7984b0ff811a4b42e3d88dad1a3fb4c0b580d04fa425",
+    "zh:9f8b909d3ec50ade83c8062290378b1ec553edef6a447c56dadc01a99f4eaa93",
+    "zh:aaef921ff9aabaf8b1869a86d692ebd24fbd4e12c21205034bb679b9caf883a2",
+    "zh:ac882313207aba00dd5a76dbd572a0ddc818bb9cbf5c9d61b28fe30efaec951e",
+    "zh:bb64e8aff37becab373a1a0cc1080990785304141af42ed6aa3dd4913b000421",
+    "zh:dfe495f6621df5540d9c92ad40b8067376350b005c637ea6efac5dc15028add4",
+    "zh:f0ddf0eaf052766cfe09dea8200a946519f653c384ab4336e2a4a64fdd6310e9",
+    "zh:f1b7e684f4c7ae1eed272b6de7d2049bb87a0275cb04dbb7cda6636f600699c9",
+    "zh:ff461571e3f233699bf690db319dfe46aec75e58726636a0d97dd9ac6e32fb70",
+  ]
+}
+
+provider "registry.terraform.io/hashicorp/kubernetes" {
+  version     = "2.38.0"
+  constraints = "~> 2.23"
+  hashes = [
+    "h1:PrqdwvK/d9ZW1G35lUc5nkMyHa3/9+JOnbs66IJHNNw=",
+    "h1:soK8Lt0SZ6dB+HsypFRDzuX/npqlMU6M0fvyaR1yW0k=",
+    "zh:0af928d776eb269b192dc0ea0f8a3f0f5ec117224cd644bdacdc682300f84ba0",
+    "zh:1be998e67206f7cfc4ffe77c01a09ac91ce725de0abaec9030b22c0a832af44f",
+    "zh:326803fe5946023687d603f6f1bab24de7af3d426b01d20e51d4e6fbe4e7ec1b",
+    "zh:4a99ec8d91193af961de1abb1f824be73df07489301d62e6141a656b3ebfff12",
+    "zh:5136e51765d6a0b9e4dbcc3b38821e9736bd2136cf15e9aac11668f22db117d2",
+    "zh:63fab47349852d7802fb032e4f2b6a101ee1ce34b62557a9ad0f0f0f5b6ecfdc",
+    "zh:924fb0257e2d03e03e2bfe9c7b99aa73c195b1f19412ca09960001bee3c50d15",
+    "zh:b63a0be5e233f8f6727c56bed3b61eb9456ca7a8bb29539fba0837f1badf1396",
+    "zh:d39861aa21077f1bc899bc53e7233262e530ba8a3a2d737449b100daeb303e4d",
+    "zh:de0805e10ebe4c83ce3b728a67f6b0f9d18be32b25146aa89116634df5145ad4",
+    "zh:f569b65999264a9416862bca5cd2a6177d94ccb0424f3a4ef424428912b9cb3c",
+    "zh:faf23e45f0090eef8ba28a8aac7ec5d4fdf11a36c40a8d286304567d71c1e7db",
+  ]
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\backend.tf
+==================================================
+terraform {
+  backend "s3" {
+    bucket       = "hassan-eks-terraform-state-2026"
+    key          = "eks/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\export_project.ps1
+==================================================
+$output = "$PSScriptRoot\project_for_ai.txt"
+
+# الملفات النصية المسموح بها
+$textExtensions = @(
+    "*.py","*.js","*.ts","*.jsx","*.tsx",
+    "*.html","*.css","*.scss",
+    "*.dart","*.java","*.kt","*.swift",
+    "*.tf","*.tfvars","*.hcl",
+    "*.yaml","*.yml","*.json",
+    "*.xml","*.gradle","*.properties",
+    "*.md","*.txt","*.sh","*.ps1",
+    "*.sql","*.env","*.conf","*.cfg"
+)
+
+# فولدرات يتم تجاهلها
+$excludePatterns = @(
+    "*\.git\*",
+    "*\node_modules\*",
+    "*\.dart_tool\*",
+    "*\build\*",
+    "*\.terraform\*",
+    "*\.idea\*",
+    "*\.vscode\*",
+    "*\dist\*",
+    "*\bin\*",
+    "*\obj\*"
+)
+
+# امتدادات binary ممنوعة
+$binaryExtensions = @(
+    "*.png","*.jpg","*.jpeg","*.gif","*.webp",
+    "*.mp4","*.mp3","*.wav",
+    "*.zip","*.rar","*.7z",
+    "*.exe","*.dll","*.so",
+    "*.jar","*.apk","*.ipa",
+    "*.pdf","*.docx","*.xlsx",
+    "*.tflite","*.pt","*.onnx"
+)
+
+# حذف الملف القديم لو موجود
+if (Test-Path $output) {
+    Remove-Item $output
+}
+
+Get-ChildItem -Recurse -File | ForEach-Object {
+
+    $file = $_
+    $path = $file.FullName
+    $name = $file.Name
+
+    $isExcluded = $false
+
+    # استبعاد الفولدرات
+    foreach ($pattern in $excludePatterns) {
+        if ($path -like $pattern) {
+            $isExcluded = $true
+            break
+        }
+    }
+
+    # استبعاد الملفات الثنائية
+    if (-not $isExcluded) {
+        foreach ($pattern in $binaryExtensions) {
+            if ($name -like $pattern) {
+                $isExcluded = $true
+                break
+            }
+        }
+    }
+
+    # استبعاد جميع ملفات Markdown
+    if ($name -like "*.md") {
+        $isExcluded = $true
+    }
+
+    # التأكد أنه ملف نصي
+    $isTextFile = $false
+    foreach ($ext in $textExtensions) {
+        if ($name -like $ext) {
+            $isTextFile = $true
+            break
+        }
+    }
+
+    if ($isTextFile -and -not $isExcluded) {
+
+        Add-Content $output "`n=================================================="
+        Add-Content $output "FILE: $path"
+        Add-Content $output "=================================================="
+
+        try {
+            Get-Content $path -Raw -ErrorAction Stop | Add-Content $output
+        }
+        catch {
+            Add-Content $output "[ERROR READING FILE]"
+        }
+    }
+}
+
+Write-Host "`nDone! Output saved to:"
+Write-Host $output
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\main.tf
+==================================================
+# ============================================================================
+# PROJECT STRUCTURE:
+# terraform-eks-infrastructure/
+# ├── main.tf
+# ├── variables.tf
+# ├── outputs.tf
+# ├── backend.tf
+# ├── providers.tf
+# ├── terraform.tfvars
+# ├── modules/
+# │   ├── vpc/
+# │   │   ├── main.tf
+# │   │   ├── variables.tf
+# │   │   └── outputs.tf
+# │   ├── eks/
+# │   │   ├── main.tf
+# │   │   ├── variables.tf
+# │   │   └── outputs.tf
+# │   ├── security-groups/
+# │   │   ├── main.tf
+# │   │   ├── variables.tf
+# │   │   └── outputs.tf
+# │   └── iam/
+# │       ├── main.tf
+# │       ├── variables.tf
+# │       └── outputs.tf
+# ============================================================================
+# ============================================================================
+# ROOT MODULE - main.tf
+# ============================================================================
+terraform {
+  required_version = ">= 1.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.23"
+    }
+  }
+}
+
+# ============================================================================
+# MODULES
+# ============================================================================
+
+# VPC Module
+module "vpc" {
+  source = "./modules/vpc"
+  
+  project_name         = var.project_name
+  environment          = var.environment
+  vpc_cidr             = var.vpc_cidr
+  availability_zones   = var.availability_zones
+  public_subnet_cidrs  = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
+  enable_nat_gateway   = var.enable_nat_gateway
+  single_nat_gateway   = var.single_nat_gateway
+  enable_dns_hostnames = var.enable_dns_hostnames
+  enable_dns_support   = var.enable_dns_support
+  tags                 = var.tags
+}
+
+# IAM Module
+module "iam" {
+  source = "./modules/iam"
+  
+  project_name = var.project_name
+  environment  = var.environment
+  tags         = var.tags
+  
+  # Pass through the additional IAM users/roles
+  additional_iam_users = var.additional_iam_users
+  additional_iam_roles = var.additional_iam_roles
+}
+
+# Security Groups Module
+module "security_groups" {
+  source = "./modules/security-groups"
+  
+  project_name    = var.project_name
+  environment     = var.environment
+  vpc_id          = module.vpc.vpc_id
+  vpc_cidr        = var.vpc_cidr
+  allowed_ssh_ips = var.allowed_ssh_ips
+  tags            = var.tags
+}
+
+# EKS Module
+module "eks" {
+  source = "./modules/eks"
+  
+  project_name              = var.project_name
+  environment               = var.environment
+  cluster_version           = var.cluster_version
+  vpc_id                    = module.vpc.vpc_id
+  private_subnet_ids        = module.vpc.private_subnet_ids
+  public_subnet_ids         = module.vpc.public_subnet_ids
+  cluster_role_arn          = module.iam.eks_cluster_role_arn
+  node_role_arn             = module.iam.eks_node_role_arn
+  cluster_security_group_id = module.security_groups.cluster_security_group_id
+  node_security_group_id    = module.security_groups.node_security_group_id
+  node_group_desired_size   = var.node_group_desired_size
+  node_group_min_size       = var.node_group_min_size
+  node_group_max_size       = var.node_group_max_size
+  node_instance_types       = var.node_instance_types
+  node_disk_size            = var.node_disk_size
+  enable_cluster_encryption = var.enable_cluster_encryption
+  cluster_log_types         = var.cluster_log_types
+  tags                      = var.tags
+}
+
+
+# ============================================================================
+# AWS-AUTH CONFIGMAP - Grant Console Access to EKS
+# ============================================================================
+resource "kubernetes_config_map_v1_data" "aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+
+  data = {
+    mapRoles = yamlencode(concat(
+      [
+        # EKS Node Role - Required for nodes to join cluster
+        {
+          rolearn  = module.iam.eks_node_role_arn
+          username = "system:node:{{EC2PrivateDNSName}}"
+          groups = [
+            "system:bootstrappers",
+            "system:nodes"
+          ]
+        }
+      ],
+      # Additional IAM roles from variables
+      var.additional_iam_roles
+    ))
+    
+    # Additional IAM users from variables
+    mapUsers = yamlencode(var.additional_iam_users)
+  }
+
+  force = true
+
+  depends_on = [
+    module.eks
+  ]
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\outputs.tf
+==================================================
+# ============================================================================
+# ROOT MODULE - outputs.tf
+# ============================================================================
+
+output "vpc_id" {
+  description = "VPC ID"
+  value       = module.vpc.vpc_id
+}
+
+output "private_subnet_ids" {
+  description = "Private subnet IDs"
+  value       = module.vpc.private_subnet_ids
+}
+
+output "public_subnet_ids" {
+  description = "Public subnet IDs"
+  value       = module.vpc.public_subnet_ids
+}
+
+output "eks_cluster_id" {
+  description = "EKS cluster ID"
+  value       = module.eks.cluster_id
+}
+
+output "eks_cluster_endpoint" {
+  description = "EKS cluster endpoint"
+  value       = module.eks.cluster_endpoint
+}
+
+output "eks_cluster_security_group_id" {
+  description = "Security group ID attached to the EKS cluster"
+  value       = module.eks.cluster_security_group_id
+}
+
+output "eks_cluster_certificate_authority_data" {
+  description = "Base64 encoded certificate data for cluster"
+  value       = module.eks.cluster_certificate_authority_data
+  sensitive   = true
+}
+
+output "eks_cluster_name" {
+  description = "EKS cluster name"
+  value       = module.eks.cluster_name
+}
+
+output "node_group_id" {
+  description = "EKS node group ID"
+  value       = module.eks.node_group_id
+}
+
+output "configure_kubectl" {
+  description = "Command to configure kubectl"
+  value       = "aws eks update-kubeconfig --region ${var.aws_region} --name ${module.eks.cluster_name}"
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\providers.tf
+==================================================
+# ============================================================================
+# ROOT MODULE - providers.tf
+# ============================================================================
+
+provider "aws" {
+  region = var.aws_region
+
+  default_tags {
+    tags = merge(
+      var.tags,
+      {
+        ManagedBy   = "Terraform"
+        Project     = var.project_name
+        Environment = var.environment
+      }
+    )
+  }
+}
+
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+  }
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\terraform.tfvars
+==================================================
+# ===========================================================================
+# PROJECT CONFIGURATION
+# ============================================================================
+project_name = "my-eks-project"
+environment  = "dev"
+aws_region   = "us-east-1"
+
+# ============================================================================
+# VPC CONFIGURATION
+# ============================================================================
+vpc_cidr             = "10.0.0.0/16"
+availability_zones   = ["us-east-1a", "us-east-1b"]
+public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnet_cidrs = ["10.0.11.0/24", "10.0.12.0/24"]
+enable_nat_gateway   = true
+single_nat_gateway   = true
+enable_dns_hostnames = true
+enable_dns_support   = true
+
+# ============================================================================
+# EKS CONFIGURATION
+# ============================================================================
+cluster_version           = "1.34"
+node_group_desired_size   = 2
+node_group_min_size       = 1
+node_group_max_size       = 4
+node_instance_types       = ["t3.medium"]
+node_disk_size            = 20
+enable_cluster_encryption = true
+cluster_log_types         = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
+# ============================================================================
+# SECURITY CONFIGURATION
+# ============================================================================
+allowed_ssh_ips = ["0.0.0.0/0"]  # Replace with your IP for production
+
+# ============================================================================
+# IAM ACCESS CONFIGURATION - Grant Console Access
+# ============================================================================
+# Add your IAM user ARN here (get it with: aws sts get-caller-identity)
+additional_iam_users = [
+  {
+    userarn  = "arn:aws:iam::325087564752:user/terraform"  # REPLACE THIS
+    username = "terraform"
+    groups   = ["system:masters"]
+  }
+]
+
+# If you use IAM roles (SSO, assumed roles), add them here
+additional_iam_roles = [
+  # Uncomment and modify if needed:
+  {
+    rolearn  = "arn:aws:iam::325087564752:role/jenkins-role"
+    username = "jenkins-role"
+    groups   = ["system:masters"]
+  }
+]
+
+# ============================================================================
+# TAGS
+# ============================================================================
+tags = {
+  Project     = "EKS-Infrastructure"
+  Environment = "dev"
+  ManagedBy   = "Terraform"
+  Owner       = "DevOps-Team"
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\variables.tf
+==================================================
+# ============================================================================
+# ROOT MODULE - variables.tf
+# ============================================================================
+
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name (dev, staging, prod)"
+  type        = string
+}
+
+variable "aws_region" {
+  description = "AWS region to deploy resources"
+  type        = string
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+}
+
+variable "availability_zones" {
+  description = "List of availability zones"
+  type        = list(string)
+}
+
+variable "public_subnet_cidrs" {
+  description = "CIDR blocks for public subnets"
+  type        = list(string)
+}
+
+variable "private_subnet_cidrs" {
+  description = "CIDR blocks for private subnets"
+  type        = list(string)
+}
+
+variable "enable_nat_gateway" {
+  description = "Enable NAT Gateway for private subnets"
+  type        = bool
+  default     = true
+}
+
+variable "single_nat_gateway" {
+  description = "Use single NAT Gateway for all private subnets"
+  type        = bool
+  default     = false
+}
+
+variable "enable_dns_hostnames" {
+  description = "Enable DNS hostnames in VPC"
+  type        = bool
+  default     = true
+}
+
+variable "enable_dns_support" {
+  description = "Enable DNS support in VPC"
+  type        = bool
+  default     = true
+}
+
+variable "cluster_version" {
+  description = "Kubernetes version for EKS cluster"
+  type        = string
+}
+
+variable "node_group_desired_size" {
+  description = "Desired number of worker nodes"
+  type        = number
+}
+
+variable "node_group_min_size" {
+  description = "Minimum number of worker nodes"
+  type        = number
+}
+
+variable "node_group_max_size" {
+  description = "Maximum number of worker nodes"
+  type        = number
+}
+
+variable "node_instance_types" {
+  description = "Instance types for EKS worker nodes"
+  type        = list(string)
+}
+
+variable "node_disk_size" {
+  description = "Disk size for EKS worker nodes in GB"
+  type        = number
+}
+
+# Add to your existing variables.tf
+
+variable "additional_iam_users" {
+  description = "Additional IAM users to grant cluster access"
+  type = list(object({
+    userarn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
+
+variable "additional_iam_roles" {
+  description = "Additional IAM roles to grant cluster access"
+  type = list(object({
+    rolearn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
+
+variable "enable_cluster_encryption" {
+  description = "Enable encryption for EKS cluster secrets"
+  type        = bool
+  default     = true
+}
+
+variable "cluster_log_types" {
+  description = "List of control plane logging types to enable"
+  type        = list(string)
+  default     = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+}
+
+variable "allowed_ssh_ips" {
+  description = "List of IP addresses allowed to SSH to nodes"
+  type        = list(string)
+  default     = []
+}
+
+variable "tags" {
+  description = "Common tags for all resources"
+  type        = map(string)
+  default     = {}
+}
+
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\eks\main.tf
+==================================================
+# ============================================================================
+# EKS MODULE - modules/eks/main.tf
+# ============================================================================
+
+# KMS key for EKS encryption
+resource "aws_kms_key" "eks" {
+  count                   = var.enable_cluster_encryption ? 1 : 0
+  description             = "KMS key for EKS cluster encryption"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-eks-kms"
+    }
+  )
+}
+
+resource "aws_kms_alias" "eks" {
+  count         = var.enable_cluster_encryption ? 1 : 0
+  name          = "alias/${var.project_name}-${var.environment}-eks"
+  target_key_id = aws_kms_key.eks[0].key_id
+}
+
+# CloudWatch Log Group for EKS
+resource "aws_cloudwatch_log_group" "eks_cluster" {
+  name              = "/aws/eks/${var.project_name}-${var.environment}-cluster/cluster"
+  retention_in_days = 7
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-eks-logs"
+    }
+  )
+}
+
+# EKS Cluster
+resource "aws_eks_cluster" "main" {
+  name     = "${var.project_name}-${var.environment}-cluster"
+  role_arn = var.cluster_role_arn
+  version  = var.cluster_version
+
+  vpc_config {
+    subnet_ids              = concat(var.private_subnet_ids, var.public_subnet_ids)
+    endpoint_private_access = true
+    endpoint_public_access  = true
+    security_group_ids      = [var.cluster_security_group_id]
+  }
+
+  dynamic "encryption_config" {
+    for_each = var.enable_cluster_encryption ? [1] : []
+    content {
+      provider {
+        key_arn = aws_kms_key.eks[0].arn
+      }
+      resources = ["secrets"]
+    }
+  }
+
+  enabled_cluster_log_types = var.cluster_log_types
+
+  depends_on = [
+    aws_cloudwatch_log_group.eks_cluster
+  ]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-cluster"
+    }
+  )
+}
+
+# EKS Node Groups - One per Availability Zone for HA
+resource "aws_eks_node_group" "main" {
+  count           = length(var.private_subnet_ids)
+  cluster_name    = aws_eks_cluster.main.name
+  node_group_name = "${var.project_name}-${var.environment}-node-group-${count.index + 1}"
+  node_role_arn   = var.node_role_arn
+  subnet_ids      = [var.private_subnet_ids[count.index]]
+  version         = var.cluster_version
+
+  scaling_config {
+    desired_size = ceil(var.node_group_desired_size / length(var.private_subnet_ids))
+    max_size     = ceil(var.node_group_max_size / length(var.private_subnet_ids))
+    min_size     = ceil(var.node_group_min_size / length(var.private_subnet_ids))
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+
+  instance_types = var.node_instance_types
+  disk_size      = var.node_disk_size
+  capacity_type  = "ON_DEMAND"
+
+  labels = {
+    role        = "worker"
+    environment = var.environment
+    az          = element(split("/", var.private_subnet_ids[count.index]), 1)
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-node-group-${count.index + 1}"
+      "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "owned"
+    }
+  )
+
+  depends_on = [
+    aws_eks_cluster.main
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [scaling_config[0].desired_size]
+  }
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\eks\outputs.tf
+==================================================
+# ============================================================================
+# EKS MODULE - modules/eks/outputs.tf
+# ============================================================================
+
+output "cluster_id" {
+  description = "EKS cluster ID"
+  value       = aws_eks_cluster.main.id
+}
+
+output "cluster_name" {
+  description = "EKS cluster name"
+  value       = aws_eks_cluster.main.name
+}
+
+output "cluster_endpoint" {
+  description = "EKS cluster endpoint"
+  value       = aws_eks_cluster.main.endpoint
+}
+
+output "cluster_security_group_id" {
+  description = "Security group ID attached to the EKS cluster"
+  value       = aws_eks_cluster.main.vpc_config[0].cluster_security_group_id
+}
+
+output "cluster_certificate_authority_data" {
+  description = "Base64 encoded certificate data"
+  value       = aws_eks_cluster.main.certificate_authority[0].data
+}
+
+output "cluster_version" {
+  description = "EKS cluster version"
+  value       = aws_eks_cluster.main.version
+}
+
+output "cluster_arn" {
+  description = "ARN of the EKS cluster"
+  value       = aws_eks_cluster.main.arn
+}
+
+# Fix these three outputs to handle count
+output "node_group_id" {
+  description = "EKS node group IDs"
+  value       = aws_eks_node_group.main[*].id
+}
+
+output "node_group_arn" {
+  description = "ARN of the EKS node groups"
+  value       = aws_eks_node_group.main[*].arn
+}
+
+output "node_group_status" {
+  description = "Status of the EKS node groups"
+  value       = aws_eks_node_group.main[*].status
+}
+
+output "oidc_provider_arn" {
+  description = "ARN of the OIDC Provider for EKS"
+  value       = aws_eks_cluster.main.identity[0].oidc[0].issuer
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\eks\variables.tf
+==================================================
+# ============================================================================
+# EKS MODULE - modules/eks/variables.tf
+# ============================================================================
+
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "cluster_version" {
+  description = "Kubernetes version"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "VPC ID"
+  type        = string
+}
+
+variable "private_subnet_ids" {
+  description = "Private subnet IDs for EKS nodes"
+  type        = list(string)
+}
+
+variable "public_subnet_ids" {
+  description = "Public subnet IDs for EKS control plane"
+  type        = list(string)
+}
+
+variable "cluster_role_arn" {
+  description = "IAM role ARN for EKS cluster"
+  type        = string
+}
+
+variable "node_role_arn" {
+  description = "IAM role ARN for EKS nodes"
+  type        = string
+}
+
+variable "cluster_security_group_id" {
+  description = "Security group ID for EKS cluster"
+  type        = string
+}
+
+variable "node_security_group_id" {
+  description = "Security group ID for EKS nodes"
+  type        = string
+}
+
+variable "node_group_desired_size" {
+  description = "Desired number of nodes"
+  type        = number
+}
+
+variable "node_group_min_size" {
+  description = "Minimum number of nodes"
+  type        = number
+}
+
+variable "node_group_max_size" {
+  description = "Maximum number of nodes"
+  type        = number
+}
+
+variable "node_instance_types" {
+  description = "Instance types for nodes"
+  type        = list(string)
+}
+
+variable "node_disk_size" {
+  description = "Disk size for nodes in GB"
+  type        = number
+}
+
+variable "enable_cluster_encryption" {
+  description = "Enable cluster encryption"
+  type        = bool
+}
+
+variable "cluster_log_types" {
+  description = "Cluster log types"
+  type        = list(string)
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\iam\main.tf
+==================================================
+# ============================================================================
+# IAM MODULE - modules/iam/main.tf
+# ============================================================================
+
+# EKS Cluster Role
+resource "aws_iam_role" "eks_cluster" {
+  name = "${var.project_name}-${var.environment}-eks-cluster-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "eks.amazonaws.com"
+      }
+    }]
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-eks-cluster-role"
+    }
+  )
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+  role       = aws_iam_role.eks_cluster.name
+}
+
+resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = aws_iam_role.eks_cluster.name
+}
+
+# EKS Node Role
+resource "aws_iam_role" "eks_node" {
+  name = "${var.project_name}-${var.environment}-eks-node-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+    }]
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-eks-node-role"
+    }
+  )
+}
+
+resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.eks_node.name
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.eks_node.name
+}
+
+resource "aws_iam_role_policy_attachment" "eks_container_registry_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.eks_node.name
+}
+
+# Additional policy for CloudWatch logs
+resource "aws_iam_role_policy_attachment" "eks_cloudwatch_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  role       = aws_iam_role.eks_node.name
+}
+
+# Data source to get the caller identity (Jenkins IAM principal)
+data "aws_caller_identity" "current" {}
+
+# Get additional IAM users/roles that need access
+variable "additional_iam_users" {
+  description = "Additional IAM users to grant cluster access"
+  type = list(object({
+    userarn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
+
+variable "additional_iam_roles" {
+  description = "Additional IAM roles to grant cluster access"
+  type = list(object({
+    rolearn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\iam\outputs.tf
+==================================================
+# ============================================================================
+# IAM MODULE - modules/iam/outputs.tf
+# ============================================================================
+
+output "eks_cluster_role_arn" {
+  description = "ARN of EKS cluster IAM role"
+  value       = aws_iam_role.eks_cluster.arn
+}
+
+output "eks_cluster_role_name" {
+  description = "Name of EKS cluster IAM role"
+  value       = aws_iam_role.eks_cluster.name
+}
+
+output "eks_node_role_arn" {
+  description = "ARN of EKS node IAM role"
+  value       = aws_iam_role.eks_node.arn
+}
+
+output "eks_node_role_name" {
+  description = "Name of EKS node IAM role"
+  value       = aws_iam_role.eks_node.name
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\iam\variables.tf
+==================================================
+# ============================================================================
+# IAM MODULE - modules/iam/variables.tf
+# ============================================================================
+
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\security-groups\main.tf
+==================================================
+# ============================================================================
+# SECURITY GROUPS MODULE - modules/security-groups/main.tf
+# ============================================================================
+
+# EKS Cluster Security Group
+resource "aws_security_group" "eks_cluster" {
+  name        = "${var.project_name}-${var.environment}-eks-cluster-sg"
+  description = "Security group for EKS cluster control plane"
+  vpc_id      = var.vpc_id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-eks-cluster-sg"
+    }
+  )
+}
+
+resource "aws_security_group_rule" "cluster_ingress_workstation_https" {
+  description       = "Allow workstation to communicate with the cluster API Server"
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.eks_cluster.id
+}
+
+resource "aws_security_group_rule" "cluster_egress_all" {
+  description       = "Allow cluster to communicate with nodes and internet"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.eks_cluster.id
+}
+
+# EKS Node Security Group
+resource "aws_security_group" "eks_nodes" {
+  name        = "${var.project_name}-${var.environment}-eks-node-sg"
+  description = "Security group for EKS worker nodes"
+  vpc_id      = var.vpc_id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-eks-node-sg"
+      "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "owned"
+    }
+  )
+}
+
+resource "aws_security_group_rule" "nodes_internal" {
+  description              = "Allow nodes to communicate with each other"
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 65535
+  protocol                 = "-1"
+  source_security_group_id = aws_security_group.eks_nodes.id
+  security_group_id        = aws_security_group.eks_nodes.id
+}
+
+resource "aws_security_group_rule" "nodes_cluster_inbound" {
+  description              = "Allow worker Kubelets and pods to receive communication from the cluster control plane"
+  type                     = "ingress"
+  from_port                = 1025
+  to_port                  = 65535
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.eks_cluster.id
+  security_group_id        = aws_security_group.eks_nodes.id
+}
+
+resource "aws_security_group_rule" "nodes_cluster_inbound_https" {
+  description              = "Allow pods to communicate with the cluster API Server"
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.eks_cluster.id
+  security_group_id        = aws_security_group.eks_nodes.id
+}
+
+resource "aws_security_group_rule" "nodes_egress_all" {
+  description       = "Allow nodes to communicate with internet"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.eks_nodes.id
+}
+
+resource "aws_security_group_rule" "cluster_api_to_nodes" {
+  description              = "Allow cluster API to communicate with nodes"
+  type                     = "egress"
+  from_port                = 1025
+  to_port                  = 65535
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.eks_nodes.id
+  security_group_id        = aws_security_group.eks_cluster.id
+}
+
+# SSH access to nodes (optional)
+resource "aws_security_group_rule" "nodes_ssh" {
+  count             = length(var.allowed_ssh_ips) > 0 ? 1 : 0
+  description       = "Allow SSH access to nodes"
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = var.allowed_ssh_ips
+  security_group_id = aws_security_group.eks_nodes.id
+}
+
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\security-groups\outputs.tf
+==================================================
+
+# ============================================================================
+# SECURITY GROUPS MODULE - modules/security-groups/outputs.tf
+# ============================================================================
+
+output "cluster_security_group_id" {
+  description = "Security group ID for EKS cluster"
+  value       = aws_security_group.eks_cluster.id
+}
+
+output "node_security_group_id" {
+  description = "Security group ID for EKS nodes"
+  value       = aws_security_group.eks_nodes.id
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\security-groups\variables.tf
+==================================================
+# ============================================================================
+# SECURITY GROUPS MODULE - modules/security-groups/variables.tf
+# ============================================================================
+
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "VPC ID"
+  type        = string
+}
+
+variable "vpc_cidr" {
+  description = "VPC CIDR block"
+  type        = string
+}
+
+variable "allowed_ssh_ips" {
+  description = "List of IPs allowed to SSH to nodes"
+  type        = list(string)
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+}
+
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\vpc\main.tf
+==================================================
+# ============================================================================
+# VPC MODULE - modules/vpc/main.tf
+# ============================================================================
+
+resource "aws_vpc" "main" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_hostnames = var.enable_dns_hostnames
+  enable_dns_support   = var.enable_dns_support
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-vpc"
+      "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "shared"
+    }
+  )
+}
+
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-igw"
+    }
+  )
+}
+
+resource "aws_subnet" "public" {
+  count                   = length(var.public_subnet_cidrs)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.public_subnet_cidrs[count.index]
+  availability_zone       = var.availability_zones[count.index]
+  map_public_ip_on_launch = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-public-subnet-${count.index + 1}"
+      "kubernetes.io/role/elb" = "1"
+      "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "shared"
+    }
+  )
+}
+
+resource "aws_subnet" "private" {
+  count             = length(var.private_subnet_cidrs)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.private_subnet_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-private-subnet-${count.index + 1}"
+      "kubernetes.io/role/internal-elb" = "1"
+      "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "shared"
+    }
+  )
+}
+
+resource "aws_eip" "nat" {
+  count  = var.enable_nat_gateway ? (var.single_nat_gateway ? 1 : length(var.availability_zones)) : 0
+  domain = "vpc"
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-nat-eip-${count.index + 1}"
+    }
+  )
+
+  depends_on = [aws_internet_gateway.main]
+}
+
+resource "aws_nat_gateway" "main" {
+  count         = var.enable_nat_gateway ? (var.single_nat_gateway ? 1 : length(var.availability_zones)) : 0
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public[count.index].id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-nat-${count.index + 1}"
+    }
+  )
+
+  depends_on = [aws_internet_gateway.main]
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-public-rt"
+    }
+  )
+}
+
+resource "aws_route_table" "private" {
+  count  = var.enable_nat_gateway ? (var.single_nat_gateway ? 1 : length(var.availability_zones)) : 0
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.main[count.index].id
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-${var.environment}-private-rt-${count.index + 1}"
+    }
+  )
+}
+
+resource "aws_route_table_association" "public" {
+  count          = length(var.public_subnet_cidrs)
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "private" {
+  count          = length(var.private_subnet_cidrs)
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = var.single_nat_gateway ? aws_route_table.private[0].id : aws_route_table.private[count.index].id
+}
+
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\vpc\outputs.tf
+==================================================
+# ============================================================================
+# VPC MODULE - modules/vpc/outputs.tf
+# ============================================================================
+
+output "vpc_id" {
+  description = "VPC ID"
+  value       = aws_vpc.main.id
+}
+
+output "vpc_cidr" {
+  description = "VPC CIDR block"
+  value       = aws_vpc.main.cidr_block
+}
+
+output "public_subnet_ids" {
+  description = "Public subnet IDs"
+  value       = aws_subnet.public[*].id
+}
+
+output "private_subnet_ids" {
+  description = "Private subnet IDs"
+  value       = aws_subnet.private[*].id
+}
+
+output "nat_gateway_ids" {
+  description = "NAT Gateway IDs"
+  value       = aws_nat_gateway.main[*].id
+}
+
+output "internet_gateway_id" {
+  description = "Internet Gateway ID"
+  value       = aws_internet_gateway.main.id
+}
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Infrastructure\modules\vpc\variables.tf
+==================================================
+# ============================================================================
+# VPC MODULE - modules/vpc/variables.tf
+# ============================================================================
+
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+}
+
+variable "availability_zones" {
+  description = "List of availability zones"
+  type        = list(string)
+}
+
+variable "public_subnet_cidrs" {
+  description = "CIDR blocks for public subnets"
+  type        = list(string)
+}
+
+variable "private_subnet_cidrs" {
+  description = "CIDR blocks for private subnets"
+  type        = list(string)
+}
+
+variable "enable_nat_gateway" {
+  description = "Enable NAT Gateway"
+  type        = bool
+}
+
+variable "single_nat_gateway" {
+  description = "Use single NAT Gateway"
+  type        = bool
+}
+
+variable "enable_dns_hostnames" {
+  description = "Enable DNS hostnames"
+  type        = bool
+}
+
+variable "enable_dns_support" {
+  description = "Enable DNS support"
+  type        = bool
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+}
+
+

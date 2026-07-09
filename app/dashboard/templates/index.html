@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart City | Traffic Command Center</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar glass">
+            <div class="logo">
+                <i class="fas fa-traffic-light"></i>
+                <span>SmartTraffic</span>
+            </div>
+            <nav>
+                <a href="#" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="#"><i class="fas fa-map-marked-alt"></i> Live Map</a>
+                <a href="#"><i class="fas fa-server"></i> Infra Metrics</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="header-info">
+                    <h1>Intelligent Traffic Control Center</h1>
+                    <div class="sub-header">
+                        <p>Real-Time Monitoring Platform</p>
+                        <span id="live-clock" class="clock">00:00:00</span>
+                    </div>
+                </div>
+                <div class="infra-stats glass">
+                    <div class="infra-item">
+                        <span class="label">API Latency:</span> <span id="infra-latency" class="value text-green">--</span>
+                    </div>
+                    <div class="infra-item">
+                        <span class="pulse-dot"></span> <span id="infra-status">Collector Online</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Alerts Container -->
+            <div id="alerts-container"></div>
+
+            <!-- KPI Cards -->
+            <section class="stats-grid">
+                <div class="card glass">
+                    <i class="fas fa-road icon-blue"></i>
+                    <div class="card-data">
+                        <h3>Monitored Roads</h3>
+                        <p id="stat-roads" class="counter">0</p>
+                    </div>
+                </div>
+                <div class="card glass">
+                    <i class="fas fa-percentage icon-orange"></i>
+                    <div class="card-data">
+                        <h3>Avg Congestion</h3>
+                        <p id="stat-avg" class="counter">0%</p>
+                    </div>
+                </div>
+                <div class="card glass">
+                    <i class="fas fa-exclamation-circle icon-red"></i>
+                    <div class="card-data">
+                        <h3>Critical Zones</h3>
+                        <p id="stat-critical" class="counter">0</p>
+                    </div>
+                </div>
+                <div class="card glass">
+                    <i class="fas fa-database icon-green"></i>
+                    <div class="card-data">
+                        <h3>DB Health</h3>
+                        <p id="stat-db">Healthy</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Data Section -->
+            <div class="content-grid">
+                <!-- Chart Section -->
+                <section class="chart-container card glass">
+                    <h3><i class="fas fa-wave-square"></i> Live Congestion Trend</h3>
+                    <div class="canvas-wrapper">
+                        <canvas id="trafficChart"></canvas>
+                    </div>
+                </section>
+
+                <!-- Table Section -->
+                <section class="table-container card glass">
+                    <h3><i class="fas fa-stream"></i> Live Traffic Feed</h3>
+                    <div class="table-wrapper">
+                        <table id="traffic-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Location</th>
+                                    <th>Congestion</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- JS Injection -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

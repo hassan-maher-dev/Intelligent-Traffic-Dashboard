@@ -1,0 +1,56 @@
+---
+- name: Setup EKS Management & Operations Environment
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+    - name: Update apt cache and install base dependencies
+      apt:
+        name:
+          - curl
+          - unzip
+          - git
+          - jq
+          - apt-transport-https
+          - ca-certificates
+        state: present
+        update_cache: yes
+
+    - name: Install AWS CLI v2
+      unarchive:
+        src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/
+        remote_src: yes
+      
+    - name: Run AWS CLI install script
+      command: /tmp/aws/install --update
+      ignore_errors: yes
+
+    - name: Download and install kubectl
+      get_url:
+        url: "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl"
+        dest: /usr/local/bin/kubectl
+        mode: '0755'
+
+    - name: Download and install Helm
+      script: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      args:
+        creates: /usr/local/bin/helm
+
+    - name: Install ArgoCD CLI
+      get_url:
+        url: "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64"
+        dest: /usr/local/bin/argocd
+        mode: '0755'
+
+    - name: Verify Installations
+      shell: |
+        aws --version
+        kubectl version --client
+        helm version
+        argocd version --client
+      register: tool_versions
+
+    - name: Display Installed Versions
+      debug:
+        msg: "{{ tool_versions.stdout_lines }}"
