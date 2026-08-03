@@ -1,7 +1,7 @@
 # 🚦 Intelligent Traffic Management Dashboard
 
-<p align="center">
-  <img src="./Intelligent-Traffic-Dashboard-Infographic.jpg" alt="DEPI DevOps Track - Intelligent Traffic Management Dashboard Infographic" width="100%">
+<p align="center">  
+  <img src="docs/Intelligent-Traffic-Dashboard-Infographic.jpg" alt="DEPI DevOps Track - Intelligent Traffic Management Dashboard Infographic" width="100%">
 </p>
 
 <p align="center">
