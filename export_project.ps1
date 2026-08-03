@@ -9,7 +9,11 @@ $textExtensions = @(
     "*.yaml","*.yml","*.json",
     "*.xml","*.gradle","*.properties",
     "*.md","*.txt","*.sh","*.ps1",
-    "*.sql","*.env","*.conf","*.cfg"
+    "*.sql","*.env","*.conf","*.cfg",
+    "Dockerfile",
+    "Jenkinsfile",
+    "Dockerfile.*"
+    
 )
 
 # فولدرات يتم تجاهلها
@@ -19,6 +23,7 @@ $excludePatterns = @(
     "*\.dart_tool\*",
     "*\build\*",
     "*\.terraform\*",
+    "*\.md\*",
     "*\.idea\*",
     "*\.vscode\*",
     "*\dist\*",

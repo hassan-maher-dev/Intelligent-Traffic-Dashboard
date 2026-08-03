@@ -13,7 +13,11 @@ $textExtensions = @(
     "*.yaml","*.yml","*.json",
     "*.xml","*.gradle","*.properties",
     "*.md","*.txt","*.sh","*.ps1",
-    "*.sql","*.env","*.conf","*.cfg"
+    "*.sql","*.env","*.conf","*.cfg",
+    "Dockerfile",
+    "Jenkinsfile",
+    "Dockerfile.*"
+    
 )
 
 # فولدرات يتم تجاهلها
@@ -23,6 +27,7 @@ $excludePatterns = @(
     "*\.dart_tool\*",
     "*\build\*",
     "*\.terraform\*",
+    "*\.md\*",
     "*\.idea\*",
     "*\.vscode\*",
     "*\dist\*",
@@ -107,6 +112,62 @@ Write-Host $output
 ==================================================
 FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\ansible\playbook.yml
 ==================================================
+---
+- name: Setup EKS Management & Operations Environment
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+    - name: Update apt cache and install base dependencies
+      apt:
+        name:
+          - curl
+          - unzip
+          - git
+          - jq
+          - apt-transport-https
+          - ca-certificates
+        state: present
+        update_cache: yes
+
+    - name: Install AWS CLI v2
+      unarchive:
+        src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/
+        remote_src: yes
+      
+    - name: Run AWS CLI install script
+      command: /tmp/aws/install --update
+      ignore_errors: yes
+
+    - name: Download and install kubectl
+      get_url:
+        url: "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl"
+        dest: /usr/local/bin/kubectl
+        mode: '0755'
+
+    - name: Download and install Helm
+      script: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      args:
+        creates: /usr/local/bin/helm
+
+    - name: Install ArgoCD CLI
+      get_url:
+        url: "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64"
+        dest: /usr/local/bin/argocd
+        mode: '0755'
+
+    - name: Verify Installations
+      shell: |
+        aws --version
+        kubectl version --client
+        helm version
+        argocd version --client
+      register: tool_versions
+
+    - name: Display Installed Versions
+      debug:
+        msg: "{{ tool_versions.stdout_lines }}"
 
 ==================================================
 FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\app\collector\collector.py
@@ -188,6 +249,16 @@ while True:
 
     # إرسال قراءة كل 5 ثواني
     time.sleep(5)
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\app\collector\Dockerfile
+==================================================
+FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY collector.py .
+CMD ["python", "collector.py"]
 
 ==================================================
 FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\app\collector\requirements.txt
@@ -281,6 +352,22 @@ def health():
 if __name__ == '__main__':
     init_db()
     app.run(host='0.0.0.0', port=5000)
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\app\dashboard\Dockerfile
+==================================================
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
 
 ==================================================
 FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\app\dashboard\requirements.txt
@@ -957,6 +1044,108 @@ FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\app\dashboard\templa
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\jenkins\Jenkinsfile
+==================================================
+
+pipeline {
+    agent any
+
+    environment {
+        // Docker Hub Credentials
+        DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
+        DOCKER_USERNAME = 'hassanmaher2001'
+        APP_NAME_DASHBOARD = 'traffic-dashboard'
+        APP_NAME_COLLECTOR = 'traffic-collector'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+        
+        // Git Repository Credentials
+        GIT_CREDENTIALS_ID = 'github-creds'
+        REPO_URL = 'https://github.com/YOUR_GITHUB_USERNAME/Intelligent-Traffic-Dashboard.git' // غير ده برابط الريبو بتاعك
+        GIT_BRANCH = 'main'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    echo "Building Dashboard Image..."
+                    sh "docker build -t ${DOCKER_USERNAME}/${APP_NAME_DASHBOARD}:${IMAGE_TAG} -t ${DOCKER_USERNAME}/${APP_NAME_DASHBOARD}:latest ./app/dashboard"
+                    
+                    echo "Building Collector Image..."
+                    sh "docker build -t ${DOCKER_USERNAME}/${APP_NAME_COLLECTOR}:${IMAGE_TAG} -t ${DOCKER_USERNAME}/${APP_NAME_COLLECTOR}:latest ./app/collector"
+                }
+            }
+        }
+
+        stage('Push to Registry') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME_VAR')]) {
+                        sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME_VAR --password-stdin"
+                        
+                        echo "Pushing Dashboard Image..."
+                        sh "docker push ${DOCKER_USERNAME}/${APP_NAME_DASHBOARD}:${IMAGE_TAG}"
+                        sh "docker push ${DOCKER_USERNAME}/${APP_NAME_DASHBOARD}:latest"
+                        
+                        echo "Pushing Collector Image..."
+                        sh "docker push ${DOCKER_USERNAME}/${APP_NAME_COLLECTOR}:${IMAGE_TAG}"
+                        sh "docker push ${DOCKER_USERNAME}/${APP_NAME_COLLECTOR}:latest"
+                    }
+                }
+            }
+        }
+
+        stage('Update GitOps Manifests') {
+            steps {
+                script {
+                    echo "Updating Kubernetes Manifests with new Image Tags..."
+                    
+                    sh """
+                        git config user.email "jenkins@hassanmaher.tech"
+                        git config user.name "Jenkins CI"
+                    """
+
+                    sh """
+                        sed -i "s|image: ${DOCKER_USERNAME}/${APP_NAME_DASHBOARD}:.*|image: ${DOCKER_USERNAME}/${APP_NAME_DASHBOARD}:${IMAGE_TAG}|g" k8s/application/deployment-dashboard.yaml
+                        sed -i "s|image: ${DOCKER_USERNAME}/${APP_NAME_COLLECTOR}:.*|image: ${DOCKER_USERNAME}/${APP_NAME_COLLECTOR}:${IMAGE_TAG}|g" k8s/application/deployment-collector.yaml
+                    """
+
+                    withCredentials([usernamePassword(credentialsId: "${GIT_CREDENTIALS_ID}", passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh """
+                            git add k8s/application/deployment-dashboard.yaml
+                            git add k8s/application/deployment-collector.yaml
+                            
+                            # نتأكد إن فيه تغيير حصل فعلاً عشان الـ Pipeline ميضربش
+                            if ! git diff --cached --quiet; then
+                                git commit -m "Update image tags to ${IMAGE_TAG} [skip ci]"
+                                git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${REPO_URL#https://} HEAD:${GIT_BRANCH}
+                            else
+                                echo "No changes to commit"
+                            fi
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "CI Pipeline Completed Successfully! ArgoCD will now sync the new images."
+        }
+        failure {
+            echo "CI Pipeline Failed. Please check the logs."
+        }
+    }
+}
 
 ==================================================
 FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\k8s\application\configmap.yaml
@@ -2925,6 +3114,111 @@ variable "tags" {
 }
 
 
+
+
+==================================================
+FILE: C:\Users\Hassan\Desktop\Intelligent-Traffic-Dashboard\terraform\Jenkinsfile
+==================================================
+pipeline {
+
+    agent any
+ 
+  
+    stages {
+ 
+        stage('Checkout Code') {
+
+            steps {
+
+                echo " Checking out repository..."
+
+                git branch: 'main', url: 'https://github.com/hassan-maher-dev/Intelligent-Infrastructure.git'
+
+            }
+
+        }
+ 
+        stage('Terraform Init') {
+
+            steps {
+
+                echo " Initializing Terraform..."
+
+                sh 'terraform init -reconfigure'
+
+            }
+
+        }
+ 
+        stage('Terraform Plan') {
+
+            steps {
+
+                echo " Creating Terraform plan..."
+
+                sh 'terraform plan -out=tfplan'
+
+            }
+
+        }
+
+
+
+       stage('Terraform Apply') {
+
+            steps {
+
+                echo " Applying Terraform..."
+
+                sh 'terraform apply -auto-approve tfplan'
+
+                echo " Infrastructure deployed successfully!"
+
+            }
+
+        }
+
+
+
+/*       stage('Terraform Destroy') {
+
+            steps {
+
+                echo " Destroying Terraform infrastructure..."
+
+                sh 'terraform destroy -auto-approve'
+
+                echo " Infrastructure destroyed successfully!"
+
+            }
+
+        }
+*/
+
+ }
+ 
+    post {
+
+        always {
+            // This will always work in the end to clean the space.
+            echo " Cleaning up workspace to save disk space..."
+            deleteDir() 
+        }
+
+        success {
+
+            echo " Pipeline completed successfully!"
+
+        }
+
+        failure {
+
+            echo " Pipeline failed!"
+
+        }
+
+    }
+}
 
 
 ==================================================
