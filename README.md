@@ -22,7 +22,17 @@
 
 ## 🎬 Project Demo Video
 
-<video src="docs/demo.mp4" width="100%" controls></video>
+
+
+
+https://github.com/user-attachments/assets/511e296b-1dab-4a9e-be57-cd72e8d9b60f
+
+
+
+
+
+
+
 ---
 
 # 📖 Overview
