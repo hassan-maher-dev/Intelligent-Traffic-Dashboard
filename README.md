@@ -18,7 +18,15 @@
 ![Grafana](https://img.shields.io/badge/Grafana-Dashboards-F46800?logo=grafana)
 
 </p>
+---
 
+## 🎬 Project Demo Video
+
+<p align="center"> 
+  <video src="docs/demo.mp4" width="100%" controls>
+    Your browser does not support the video tag.
+  </video>
+</p>
 ---
 
 # 📖 Overview
