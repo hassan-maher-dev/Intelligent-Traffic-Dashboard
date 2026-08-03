@@ -1,14 +1,12 @@
 # 🚦 Intelligent Traffic Management Dashboard
 
 <p align="center">
-  <img src="docs/images/architecture.png" alt="Project Architecture" width="900">
+  <img src="./Intelligent-Traffic-Dashboard-Infographic.jpg" alt="DEPI DevOps Track - Intelligent Traffic Management Dashboard Infographic" width="100%">
 </p>
 
 <p align="center">
   <b>An End-to-End Cloud-Native Intelligent Traffic Monitoring Platform built on AWS using Kubernetes, GitOps, Infrastructure as Code, and Modern DevOps Practices.</b>
 </p>
-
-<p align="center">
 
 ![AWS](https://img.shields.io/badge/AWS-EKS-orange?logo=amazonaws)
 ![Terraform](https://img.shields.io/badge/Terraform-IaC-623CE4?logo=terraform)
