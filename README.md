@@ -23,9 +23,7 @@
 ## 🎬 Project Demo Video
 
 <p align="center"> 
-  <video src="docs/demo.mp4" width="100%" controls>
-    Your browser does not support the video tag.
-  </video>
+  <video src="docs/demo.mp4" width="100%" controls></video>
 </p>
 ---
 
