@@ -22,9 +22,7 @@
 
 ## 🎬 Project Demo Video
 
-<p align="center"> 
-  <video src="docs/demo.mp4" width="100%" controls></video>
-</p>
+<video src="docs/demo.mp4" width="100%" controls></video>
 ---
 
 # 📖 Overview
