@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Intelligent Traffic Management Dashboard — DEPI DevOps Track</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#e7ebf2; }
+  body { display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:'Inter',sans-serif; }
+
+  .viewport{ position:relative; width:100%; max-width:2560px; margin:0 auto; padding-top:56.25%; }
+  .slide{
+    position:absolute; top:0; left:0; width:2560px; height:1440px;
+    transform-origin: top left;
+    background:
+      radial-gradient(1100px 620px at 88% -8%, rgba(109,40,217,0.10), transparent 60%),
+      radial-gradient(900px 500px at 4% 8%, rgba(6,182,212,0.10), transparent 55%),
+      linear-gradient(180deg,#f7f9fc 0%, #eef1f8 100%);
+    overflow:hidden;
+  }
+
+  /* ===== palette ===== */
+  :root{
+    --deep-blue:#12306E;
+    --blue-bright:#1E4FD8;
+    --purple:#6D28D9;
+    --cyan:#06B6D4;
+    --orange:#F97316;
+    --green:#0FA968;
+    --ink:#101A33;
+    --sub:#4B5675;
+    --line:#DCE1EE;
+    --card:#FFFFFF;
+  }
+
+  .eyebrow{ font-family:'JetBrains Mono',monospace; letter-spacing:.14em; text-transform:uppercase; }
+
+  /* ================= HEADER ================= */
+  .header{
+    position:absolute; top:0; left:0; width:100%; height:92px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 56px; background:linear-gradient(90deg,var(--deep-blue),#1a3f8f 60%, var(--blue-bright));
+  }
+  .depi-mark{ display:flex; align-items:center; gap:16px; }
+  .depi-badge{
+    width:56px;height:56px;border-radius:14px;
+    background:rgba(255,255,255,0.14); border:1.5px solid rgba(255,255,255,0.35);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; color:#fff;
+  }
+  .depi-text .depi-title{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; color:#fff; letter-spacing:.03em; }
+  .depi-text .depi-sub{ font-size:13.5px; color:#c9d6f7; font-weight:500; margin-top:2px; }
+  .track-chip{
+    display:flex; align-items:center; gap:10px;
+    background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.3);
+    border-radius:999px; padding:9px 20px 9px 16px;
+  }
+  .track-chip .dot{ width:9px;height:9px;border-radius:50%; background:var(--cyan); box-shadow:0 0 0 4px rgba(6,182,212,.25); }
+  .track-chip .lbl{ color:#cdd8f8; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; }
+  .track-chip .val{ color:#fff; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; margin-left:4px; }
+
+  /* ================= HERO ================= */
+  .hero{
+    position:absolute; top:92px; left:0; width:100%; height:146px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 56px; border-bottom:1px solid var(--line); background:#fff;
+  }
+  .hero-left{ max-width:1650px; }
+  .hero-tag{ color:var(--purple); font-size:12.5px; font-weight:700; }
+  .hero h1{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:38px; color:var(--ink); letter-spacing:-0.01em; line-height:1.08; margin-top:6px; }
+  .hero p{ color:var(--sub); font-size:15.5px; margin-top:8px; font-weight:500; max-width:1500px; }
+  .hero-right{ text-align:right; flex-shrink:0; padding-left:24px; }
+  .hero-right .name{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:17px; color:var(--ink); }
+  .hero-right .role{ font-size:12.5px; color:var(--sub); margin-top:2px; font-weight:600;}
+  .hero-right .links{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--blue-bright); margin-top:6px; }
+
+  /* ================= ARCHITECTURE RIBBON ================= */
+  .ribbon{
+    position:absolute; top:238px; left:0; width:100%; height:222px;
+    background:linear-gradient(180deg,#101B3D,#132352);
+    display:flex; flex-direction:column; justify-content:center; padding:0 46px;
+  }
+  .ribbon-title{ display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-left:4px;}
+  .ribbon-title .eyebrow{ color:#8fa3e0; font-size:11.5px; }
+  .ribbon-title .t{ color:#fff; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; }
+  .flow{ display:flex; align-items:center; width:100%; }
+  .node{ display:flex; flex-direction:column; align-items:center; width:118px; flex-shrink:0; }
+  .node .ic{
+    width:58px; height:58px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.16);
+  }
+  .node .ic svg{ width:28px; height:28px; }
+  .node .lbl{ color:#e7ecfb; font-size:12px; font-weight:600; text-align:center; margin-top:9px; line-height:1.25; }
+  .node .sub{ color:#8fa3e0; font-size:10px; text-align:center; margin-top:2px; font-family:'JetBrains Mono',monospace;}
+  .arrow{ flex:1; height:2px; background:linear-gradient(90deg,rgba(255,255,255,0.35),rgba(255,255,255,0.12)); position:relative; margin:0 4px; top:-20px;}
+  .arrow:after{ content:''; position:absolute; right:-1px; top:-4px; width:0;height:0; border-top:5px solid transparent; border-bottom:5px solid transparent; border-left:8px solid rgba(255,255,255,0.4); }
+
+  /* ================= BODY 4 COLUMNS ================= */
+  .body{ position:absolute; top:460px; left:0; width:100%; height:568px; display:flex; gap:22px; padding:24px 46px 0 46px; }
+  .col{ background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px 22px 20px; box-shadow:0 10px 24px -14px rgba(16,26,51,0.18); display:flex; flex-direction:column; }
+  .col.c1{ width:26%; }
+  .col.c2{ width:24%; }
+  .col.c3{ width:25%; }
+  .col.c4{ width:25%; }
+
+  .col-head{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .col-head .ic{ width:34px;height:34px;border-radius:10px; display:flex;align-items:center;justify-content:center; }
+  .col-head h3{ font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; color:var(--ink); }
+  .ic.blue{ background:rgba(30,79,216,0.12); } .ic.blue svg{ color:var(--blue-bright); }
+  .ic.purple{ background:rgba(109,40,217,0.12); } .ic.purple svg{ color:var(--purple); }
+  .ic.cyan{ background:rgba(6,182,212,0.12); } .ic.cyan svg{ color:var(--cyan); }
+  .ic.green{ background:rgba(15,169,104,0.12); } .ic.green svg{ color:var(--green); }
+  .ic.orange{ background:rgba(249,115,22,0.12); } .ic.orange svg{ color:var(--orange); }
+  .ic svg{ width:19px;height:19px; }
+
+  .overview-txt{ font-size:13.5px; color:var(--sub); line-height:1.5; margin-bottom:14px; font-weight:500;}
+  .divider{ height:1px; background:var(--line); margin:12px 0; }
+  .mini-lbl{ font-size:11px; font-weight:700; color:var(--ink); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px; }
+  ul.feat{ list-style:none; display:flex; flex-direction:column; gap:9px; }
+  ul.feat li{ display:flex; align-items:flex-start; gap:9px; font-size:13px; color:var(--ink); font-weight:600; line-height:1.35;}
+  ul.feat li .b{ width:6px;height:6px;border-radius:50%; background:var(--cyan); margin-top:5px; flex-shrink:0; }
+
+  .badges{ display:flex; flex-wrap:wrap; gap:8px; align-content:flex-start; }
+  .badge{ font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:600; color:var(--deep-blue); background:#EEF2FF; border:1px solid #DCE3FA; border-radius:8px; padding:6px 10px; }
+
+  .steps{ display:flex; flex-direction:column; gap:14px; }
+  .step{ display:flex; gap:12px; }
+  .step .n{ width:26px;height:26px;border-radius:50%; background:var(--deep-blue); color:#fff; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px; display:flex;align-items:center;justify-content:center; flex-shrink:0; }
+  .step .st{ font-size:13px; font-weight:700; color:var(--ink); }
+  .step .sd{ font-size:11.5px; color:var(--sub); font-weight:500; margin-top:2px; line-height:1.35;}
+
+  .sec-list{ display:flex; flex-direction:column; gap:10px; }
+  .sec-item{ display:flex; gap:10px; align-items:flex-start; font-size:12.7px; color:var(--ink); font-weight:600; line-height:1.35;}
+  .sec-item svg{ width:15px;height:15px; color:var(--green); flex-shrink:0; margin-top:1px; }
+
+  /* ================= BOTTOM OUTCOMES ================= */
+  .bottom{ position:absolute; top:1044px; left:0; width:100%; height:340px; display:flex; gap:22px; padding:0 46px; }
+  .out-card{ flex:1.5; background:linear-gradient(135deg,var(--deep-blue),#1a3f8f); border-radius:18px; padding:26px 30px; color:#fff; display:flex; flex-direction:column; }
+  .fut-card{ flex:1; background:#fff; border:1px solid var(--line); border-radius:18px; padding:26px 30px; display:flex; flex-direction:column; }
+  .oh{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .oh .ic2{ width:36px;height:36px;border-radius:10px; background:rgba(255,255,255,0.14); display:flex;align-items:center;justify-content:center; }
+  .oh .ic2 svg{ width:19px;height:19px;color:#fff; }
+  .oh h2{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:19px; }
+  .out-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px 26px; flex:1; }
+  .out-item{ display:flex; gap:10px; align-items:flex-start; }
+  .out-item svg{ width:17px;height:17px; color:var(--cyan); flex-shrink:0; margin-top:2px; }
+  .out-item .t{ font-size:13.5px; font-weight:700; }
+  .out-item .d{ font-size:11.5px; color:#c9d6f7; margin-top:2px; font-weight:500; }
+
+  .fut-oh h2{ color:var(--ink); }
+  .fut-oh .ic2{ background:rgba(249,115,22,0.14); }
+  .fut-oh .ic2 svg{ color:var(--orange); }
+  .fut-grid{ display:flex; flex-wrap:wrap; gap:8px; align-content:flex-start; }
+  .fut-chip{ font-size:11.5px; font-weight:600; color:var(--deep-blue); background:#FFF4ED; border:1px solid #FBDCC3; border-radius:8px; padding:7px 11px; }
+
+  .footer{ position:absolute; bottom:0; left:0; width:100%; height:40px; background:#0d1730; display:flex; align-items:center; justify-content:space-between; padding:0 46px; }
+  .footer span{ font-family:'JetBrains Mono',monospace; font-size:11px; color:#8fa3e0; letter-spacing:.02em;}
+</style>
+</head>
+<body>
+
+<div class="viewport">
+<div class="slide" id="slide">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="depi-mark">
+      <div class="depi-badge">D</div>
+      <div class="depi-text">
+        <div class="depi-title">DEPI</div>
+        <div class="depi-sub">Digital Egypt Pioneers Initiative</div>
+      </div>
+    </div>
+    <div class="track-chip">
+      <span class="dot"></span>
+      <span class="lbl">Track</span>
+      <span class="val">DevOps Engineer</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-tag eyebrow">GRADUATION PROJECT · CLOUD-NATIVE DEVOPS</div>
+      <h1>Intelligent Traffic Management Dashboard</h1>
+      <p>An end-to-end cloud-native traffic monitoring platform on AWS — built with Kubernetes, GitOps, Infrastructure as Code, and modern DevOps practices.</p>
+    </div>
+    <div class="hero-right">
+      <div class="name">DevOps Engineering Team</div>
+      <div class="role">Cloud Architecture · CI/CD · Infrastructure as Code</div>
+      <div class="links">Graduation Project Cohort 2026</div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE RIBBON -->
+  <div class="ribbon">
+    <div class="ribbon-title">
+      <span class="eyebrow">CI/CD &amp; GITOPS WORKFLOW</span>
+      <span class="t">— from commit to cluster</span>
+    </div>
+    <div class="flow">
+      <div class="node">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="7" r="3.4"/><path d="M6.5 20c0-3 2.5-5.4 5.5-5.4s5.5 2.4 5.5 5.4"/></svg></div>
+        <div class="lbl">Developer</div><div class="sub">git push</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="node">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M8 3v4M16 3v4M4 9h16M6 5h12a2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg></div>
+        <div class="lbl">GitHub</div><div class="sub">source repo</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="node">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/></svg></div>
+        <div class="lbl">Jenkins CI</div><div class="sub">build · tag · push</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="node">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M6.5 17a4 4 0 01-.5-8 5.5 5.5 0 0110.6-1.8A4.5 4.5 0 0117.5 17h-11z"/></svg></div>
+        <div class="lbl">Docker Hub</div><div class="sub">image registry</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="node">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M6 3v18M6 8h9a3 3 0 003-3M6 16h9a3 3 0 003 3"/><circle cx="18" cy="5" r="1.4"/><circle cx="18" cy="19" r="1.4"/><circle cx="6" cy="21" r="1.4"/></svg></div>
+        <div class="lbl">GitOps Repo</div><div class="sub">k8s manifests</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="node">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M4 12a8 8 0 0113.9-5.4M20 12a8 8 0 01-13.9 5.4"/><path d="M17.5 3.5v3.5H14M6.5 20.5V17H10"/></svg></div>
+        <div class="lbl">ArgoCD</div><div class="sub">auto-sync</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="node">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M12 2l3.2 1.85v3.7L12 9.4 8.8 7.55v-3.7L12 2z"/><path d="M4.8 6.3l3.2 1.85v3.7L4.8 13.7 1.6 11.85v-3.7L4.8 6.3zM19.2 6.3l3.2 1.85v3.7l-3.2 1.85-3.2-1.85v-3.7l3.2-1.85z"/><path d="M12 14.6l3.2 1.85v3.7L12 22l-3.2-1.85v-3.7L12 14.6z"/></svg></div>
+        <div class="lbl">Amazon EKS</div><div class="sub">deploy</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="node">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M4 19V9M9.5 19V5M15 19v-7M20 19v-4"/></svg></div>
+        <div class="lbl">Monitoring</div><div class="sub">Prom · Grafana · Alertmgr</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- COL 1: Overview + Features -->
+    <div class="col c1">
+      <div class="col-head"><div class="ic blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div><h3>Overview</h3></div>
+      <div class="overview-txt">Simulates real-time smart-city traffic monitoring: sensor data is collected, processed through containerized microservices, and visualized on a live interactive dashboard.</div>
+      <div class="divider"></div>
+      <div class="mini-lbl">Core Features</div>
+      <ul class="feat">
+        <li><span class="b"></span>Real-time traffic monitoring dashboard</li>
+        <li><span class="b"></span>Traffic sensor simulator (Collector)</li>
+        <li><span class="b"></span>Cloud-native deployment on Amazon EKS</li>
+        <li><span class="b"></span>GitOps continuous deployment (ArgoCD)</li>
+        <li><span class="b"></span>Prometheus + Grafana observability</li>
+        <li><span class="b"></span>Alertmanager alerting rules</li>
+        <li><span class="b"></span>HTTPS access via AWS Load Balancer</li>
+      </ul>
+    </div>
+
+    <!-- COL 2: Tech Stack -->
+    <div class="col c2">
+      <div class="col-head"><div class="ic purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg></div><h3>Technology Stack</h3></div>
+      <div class="badges">
+        <span class="badge">AWS EKS</span>
+        <span class="badge">Terraform</span>
+        <span class="badge">Kubernetes</span>
+        <span class="badge">Docker</span>
+        <span class="badge">Ansible</span>
+        <span class="badge">Jenkins</span>
+        <span class="badge">ArgoCD</span>
+        <span class="badge">Python · Flask</span>
+        <span class="badge">SQLite</span>
+        <span class="badge">HTML/CSS/JS</span>
+        <span class="badge">Chart.js</span>
+        <span class="badge">Prometheus</span>
+        <span class="badge">Grafana</span>
+        <span class="badge">Alertmanager</span>
+        <span class="badge">NGINX Ingress</span>
+      </div>
+    </div>
+
+    <!-- COL 3: Timeline / Getting Started -->
+    <div class="col c3">
+      <div class="col-head"><div class="ic cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div><h3>Deployment Timeline</h3></div>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div><div class="st">Provision Infrastructure</div><div class="sd">Terraform init · plan · apply</div></div></div>
+        <div class="step"><div class="n">2</div><div><div class="st">Configure Environment</div><div class="sd">Ansible installs AWS CLI, kubectl, Helm, ArgoCD CLI</div></div></div>
+        <div class="step"><div class="n">3</div><div><div class="st">Build Application</div><div class="sd">Jenkins builds, tags &amp; pushes images, updates GitOps repo</div></div></div>
+        <div class="step"><div class="n">4</div><div><div class="st">Deploy via GitOps</div><div class="sd">ArgoCD syncs k8s/monitoring &amp; k8s/application to EKS</div></div></div>
+      </div>
+    </div>
+
+    <!-- COL 4: Security -->
+    <div class="col c4">
+      <div class="col-head"><div class="ic green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div><h3>Security</h3></div>
+      <div class="sec-list">
+        <div class="sec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>K8s Secrets encryptable via AWS KMS</div>
+        <div class="sec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>HTTPS terminated at AWS Load Balancer</div>
+        <div class="sec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Internal cluster traffic over HTTP</div>
+        <div class="sec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>NGINX Ingress Controller routing</div>
+        <div class="sec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>IAM Roles for Service Accounts (IRSA)-ready</div>
+        <div class="sec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Fully IaC-managed &amp; GitOps version-controlled</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Outcomes + Future -->
+  <div class="bottom">
+    <div class="out-card">
+      <div class="oh"><div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg></div><h2>Project Outcomes</h2></div>
+      <div class="out-grid">
+        <div class="out-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg><div><div class="t">Cloud-native EKS platform</div><div class="d">Fully provisioned via Terraform</div></div></div>
+        <div class="out-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg><div><div class="t">Full CI/CD + GitOps automation</div><div class="d">Jenkins → Docker Hub → ArgoCD</div></div></div>
+        <div class="out-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg><div><div class="t">Real-time monitoring stack</div><div class="d">Prometheus, Grafana &amp; Alertmanager</div></div></div>
+        <div class="out-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg><div><div class="t">Secure, version-controlled infra</div><div class="d">IaC + GitOps source of truth</div></div></div>
+        <div class="out-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg><div><div class="t">Dockerized microservices</div><div class="d">Dashboard &amp; Collector (Flask)</div></div></div>
+        <div class="out-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg><div><div class="t">Live dashboard</div><div class="d">traffic.hassanmaher.tech — coming soon</div></div></div>
+      </div>
+    </div>
+    <div class="fut-card">
+      <div class="oh fut-oh"><div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg></div><h2>Future Improvements</h2></div>
+      <div class="fut-grid">
+        <span class="fut-chip">AI traffic prediction</span>
+        <span class="fut-chip">MQTT IoT sensors</span>
+        <span class="fut-chip">HPA</span>
+        <span class="fut-chip">Cluster Autoscaler</span>
+        <span class="fut-chip">Amazon RDS</span>
+        <span class="fut-chip">Loki + Grafana Logs</span>
+        <span class="fut-chip">Jaeger tracing</span>
+        <span class="fut-chip">GitHub Actions</span>
+        <span class="fut-chip">Multi-env GitOps</span>
+        <span class="fut-chip">Multi-node production</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>DEPI · DIGITAL EGYPT PIONEERS INITIATIVE — DEVOPS ENGINEER TRACK</span>
+    <span>INTELLIGENT TRAFFIC MANAGEMENT DASHBOARD · MIT LICENSE</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+  function fitSlide(){
+    var vp = document.querySelector('.viewport');
+    var slide = document.getElementById('slide');
+    var scale = vp.clientWidth / 2560;
+    slide.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitSlide);
+  window.addEventListener('load', fitSlide);
+  fitSlide();
+</script>
+
+</body>
+</html>
