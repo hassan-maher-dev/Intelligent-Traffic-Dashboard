@@ -227,23 +227,16 @@ The project includes a complete monitoring stack.
 ## Grafana Dashboard
 
 <p align="center">
-<img src="docs/images/grafana.png" width="900">
+<img src="docs/grafana.png" width="900">
 </p>
 
----
-
-## Prometheus
-
-<p align="center">
-<img src="docs/images/prometheus.png" width="900">
-</p>
 
 ---
 
 ## ArgoCD
 
 <p align="center">
-<img src="docs/images/argocd.png" width="900">
+<img src="docs/argocd.png" width="900">
 </p>
 
 ---
@@ -251,7 +244,7 @@ The project includes a complete monitoring stack.
 ## Jenkins Pipeline
 
 <p align="center">
-<img src="docs/images/jenkins.png" width="900">
+<img src="docs/jenkins.png" width="900">
 </p>
 
 ---
@@ -259,7 +252,7 @@ The project includes a complete monitoring stack.
 ## Application Dashboard
 
 <p align="center">
-<img src="docs/images/dashboard.png" width="900">
+<img src="docs/dashboard.png" width="900">
 </p>
 
 ---
