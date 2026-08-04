@@ -347,7 +347,7 @@ Cloud & DevOps Engineer
 ### Connect with me
 
 * GitHub: https://github.com/hassan-maher-dev
-* LinkedIn: *(Add your LinkedIn profile here)*
+* LinkedIn: https://www.linkedin.com/in/hassan-maher-ec
 * Portfolio: https://www.hassanmaher.tech
 
 ---
